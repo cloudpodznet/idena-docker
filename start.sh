@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cat << EOF >> /app/idena/config.json
+cat << EOF > /home/bgrbesic/idenaconfigtest
 {
   "DataDir": "/app/idena/datadir",
   "RPC": {
