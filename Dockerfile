@@ -11,8 +11,11 @@ RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/s
     && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk \
     && apk add --no-cache bash glibc-2.34-r0.apk
 
+RUN apk update && apk add jq curl parallel
+
 RUN mkdir -p /app/idena \
-    && wget -O /app/idena/idena-node https://github.com/idena-network/idena-go/releases/download/v0.26.7/idena-node-linux-0.26.7 \
+    && curl -ksL "https://api.github.com/repos/idena-network/idena-go/releases/latest" | jq -r ".assets[0].browser_download_url" >> /app/idena/url.txt \
+    && cat /app/idena/url.txt | parallel --gnu "wget {}" -O /app/idena/idena-node \
     && chmod +x /app/idena/idena-node
 
 ADD start.sh /
